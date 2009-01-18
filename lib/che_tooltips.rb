@@ -4,18 +4,21 @@ module Che
     
     class Tooltip    
       
-      def initialize(aim_dom_id, content, options)
+      def initialize(aim_dom_id, options, content=nil)
         @aim_dom_id = aim_dom_id
-        @content = javascript_escaping content
+        @content ||= ",'#{javascript_escaping content}'"
         @options = options_parse options
       end
       
       def render
-        "new Tip('" + @aim_dom_id + "', '" + @content + "', #{@options});" + br
+        "new Tip('" + @aim_dom_id + "'" + show_content + ",  #{@options});" + br
       end
       
       private
-      
+        def show_content
+          @content || ""
+        end
+        
         def javascript_escaping(content)
           content.to_s.gsub(/\n/,' ').gsub(/'/,"\\\\'")
         end
@@ -38,17 +41,21 @@ module Che
     end
     
     def tooltip_tag(aim_dom_id, options = {}, &block)
-      content_for(:tips){Tooltip.new(aim_dom_id, capture(&block), options).render} if block_given?
+      if block_given? # no ajax
+        content_for(:tips){Tooltip.new(aim_dom_id, options, capture(&block)).render}
+      else # ajax call
+        content_for(:tips){Tooltip.new(aim_dom_id, options).render}
+      end
     end
     
     def tooltips_include_tag(&block)
       if block_given?
-        concat(render_files, block.binding) unless already_used?
-        concat("<script type=\"text/javascript\">", block.binding)
-        concat("document.observe('dom:loaded', function() {", block.binding)
+        concat(render_files) unless already_used?
+        concat("<script type=\"text/javascript\">")
+        concat("document.observe('dom:loaded', function() {")
         yield || ""
-        concat("});", block.binding)
-        concat("</script>", block.binding)
+        concat("});")
+        concat("</script>")
       end
     end
     

@@ -16,10 +16,12 @@ namespace "tooltips" do
   desc "Copying javascripts"
   task :javascripts do
     puts " * copying javascript \"prototip.js to\" \"/public/javascripts\".."
-    js_dir, js_file = File.join(RAILS_ROOT,  '/public/javascripts'), 
-      File.join(RAILS_ROOT,  '/vendor/plugins/tooltips/javascripts/prototip.js')
+    js_dir, prototip_js, script_js = File.join(RAILS_ROOT,  '/public/javascripts'), 
+      File.join(RAILS_ROOT,  '/vendor/plugins/tooltips/javascripts/prototip.js'),
+      File.join(RAILS_ROOT,  '/vendor/plugins/tooltips/javascripts/scriptaculous_fixed.js')
     FileUtils.mkdir_p(js_dir)
-    FileUtils.copy(js_file, js_dir) unless File.exist?(File.join(RAILS_ROOT,  '/public/javascripts/prototip.js'))
+    FileUtils.copy(prototip_js, js_dir) unless File.exist?(File.join(RAILS_ROOT,  '/public/javascripts/prototip.js'))
+    FileUtils.copy(script_js, js_dir) unless File.exist?(File.join(RAILS_ROOT,  '/public/javascripts/scriptaculous_fixed.js'))
   end
   
   desc "Copying images"
@@ -28,6 +30,6 @@ namespace "tooltips" do
     i_dir, i_file = File.join(RAILS_ROOT,  '/public/images'), 
       File.join(RAILS_ROOT,  '/vendor/plugins/tooltips/images/prototip')
     FileUtils.mkdir_p(i_dir)
-    FileUtils.copy(i_file, i_dir)
+    FileUtils.cp_r(i_file, i_dir)
   end
 end
