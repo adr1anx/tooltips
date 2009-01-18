@@ -41,11 +41,22 @@ All valid params you can see on prototip2 author page => http://www.nickstakenbu
   Some html and javascript code in our tip
 <% end %>
 
+Ajax 
+===============
+I put in a quick patch to allow an ajax call as well as a content call
+<% tooltip_tag("my_id",                     
+                    :ajax => { :options => {:method => 'get'}, :url => '/site/show' }
+          ) %>
+The ajax option is the same as on the authors page, so pass in whatever options.  Make sure you pass in the method of get, or it
+will post and you'll get a auth token error.
+-adrian
+
 TODO
 ===============
 - making rspec tests
-- making ajax tips
 - making tips by class
 
 Prototip2 (c) Nick Stakenburg "http://www.nickstakenburg.com/projects/prototip2/"
-this plugin (c) 2008 Ivan Garmatenko <cheef.che@gmail.com>, released under the MIT license
+this plugin (c) 2008 Ivan Garmatenko <cheef.che@gmail.com>, released under the MIT license,
+modified by Adrian Titus <adrian@adrianx.net> to clean up deprecated functions, fix install
+task, and add ajax patch.
